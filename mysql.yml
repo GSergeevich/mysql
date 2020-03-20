@@ -1,0 +1,9 @@
+---
+- hosts: 
+   - all
+  roles:
+   - mysql        
+  become: true   
+  vars:
+    bind_address: "{{ ansible_default_ipv4.address }}"
+    innodb_buffer_pool_size: "120M"

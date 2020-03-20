@@ -1,0 +1,20 @@
+[mysqld]
+### Адрес для привязки к интерфейсу, должен совпадать с именем узла
+#bind-address = {{ansible_hostname}}
+bind-address = {{ bind_address | default(ansible_default_ipv4.address) }}
+### Движок хранения по умолчанию
+default-storage-engine = {{ default_storage_engine | default('innodb') }}
+innodb_autoinc_lock_mode= {{ innodb_autoinc_lock_mode | default('2') }}
+innodb_flush_log_at_trx_commit= {{ innodb_flush_log_at_trx_commit | default('0') }}
+innodb_buffer_pool_size={{innodb_buffer_pool_size | default('122M')}}
+
+### Включение хранения каждой таблицы в отдельном файле
+innodb_file_per_table
+
+### Параметры для включения кодировки UTF-8 по умолчанию
+collation-server = utf8_general_ci
+character-set-server = utf8
+init-connect = 'SET NAMES utf8'
+
+### Увеличение максимального количества параллельных соединений
+max_connections = {{ mysql_max_connections }}
