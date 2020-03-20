@@ -18,6 +18,7 @@ script:
   - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
    
   - pwd  
+  - ls  
   - docker ps
   - cat ${container_id}  
     #Check syntax 
