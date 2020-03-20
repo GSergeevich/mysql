@@ -15,7 +15,7 @@ before_install:
 
 script:
   - container_id=$(mktemp) 
-  - 'docker run -d --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > $"{container_id}"'
+  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > $"{container_id}"'
    
     #Check syntax 
   - >
