@@ -24,6 +24,10 @@ install:
 script:
   # Basic role syntax check
   - ansible-playbook tests/test.yml -i tests/inventory --syntax-check
+  # Try to run role
+  - vagrant up
+  - ansible-playbook tests/test.yml -i inventory/vagrant.py 
+  
 
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/

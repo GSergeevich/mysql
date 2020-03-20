@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/GSergeevich/ansible-openstack.svg?branch=dev)](https://travis-ci.org/GSergeevich/ansible-openstack)
+[![Build Status](https://travis-ci.org/GSergeevich/mysql.svg?branch=dev)](https://travis-ci.org/GSergeevich/mysql)
 # ansible-openstack
-Ansible roles to deploy and testing openstack 
+Ansible role for mariadb-server (centos7)
