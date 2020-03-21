@@ -18,8 +18,11 @@ script:
   - ls ./../
   - pwd  
   - ls
-  - 'cd ../ && docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
-   
+  - 'cd ../  && docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+  - >
+    docker exec "$(cat ${container_id})" env TERM=xterm     
+    ls
+
   - role_name=$(basename $(pwd))  
     #Check syntax 
   - >
