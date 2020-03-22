@@ -15,10 +15,11 @@ before_install:
 
 script:
   - container_id=$(mktemp) 
-  - ls ./../
-  - pwd  
-  - ls
-  - 'cd ../  && docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+  - role_name=$(mktemp)
+  - basename $PWD > $role_name
+  - roles_dir=$(mktemp)  
+  - readlink $PWD/../ > $roles_dir  
+  - 'docker run --detach --volume="$(cat ${roles_dir})":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
     ls /etc/ansible/roles/role_under_test/
@@ -27,19 +28,19 @@ script:
     #Check syntax 
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
-    ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+    ansible-playbook /etc/ansible/roles/role_under_test/${role_name}/tests/test.yml
     --syntax-check
    
     #First run playbook  
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
-    ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+    ansible-playbook /etc/ansible/roles/role_under_test/${role_name}/tests/test.yml
   
     #Idempotence test
   - idempotence=$(mktemp)  
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
-    ansible-playbook /etc/ansible/roles/role_under_test/tests/test.yml
+    ansible-playbook /etc/ansible/roles/role_under_test/${role_name}/tests/test.yml
     | tee -a ${idempotence}
 
   - >
