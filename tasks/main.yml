@@ -17,7 +17,7 @@
    - mysql_check
 
 - name: mariadb installation (centos)
-  yum: name='{{ packages }}' state=present update_cache=no
+  yum: name='{{ packages }}' state=present update_cache=yes
   vars:
     packages:       
       - mariadb-server
