@@ -40,6 +40,7 @@
     port=3306
     delay=20
     timeout=300
+  when: mysql_conf.changed or mysql_limit.changed
 
 - name: Check installed options
   stat: path=/root/.my.cnf
@@ -77,5 +78,3 @@
   mysql_db: db=test state=absent login_unix_socket="{{mysql_local_sock}}"
   when:
    - optional_file.stat.exists == False
-
-
