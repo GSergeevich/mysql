@@ -1,20 +1,7 @@
 ---
 # tasks file for roles/mysql
-
-- name: mysql state check
-  shell: mysql --version
-  register: result
-  ignore_errors: True
-  tags:
-   - mysql_check
-
 - name: install epel-repo
   yum: name=epel-release state=present  
-
-- debug: msg="MYSQL VERSION IS {{ result.stdout }}"
-  ignore_errors: yes
-  tags:
-   - mysql_check
 
 - name: mariadb installation (centos)
   yum: name='{{ packages }}' state=present update_cache=yes
@@ -37,13 +24,15 @@
   tags:
    - mysql_config
    - mysql
+  register: mysql_conf
 
 - name: add limit to mysql service
   ini_file: path=/usr/lib/systemd/system/mariadb.service section=Service option=LimitNOFILE value={{ mysql_limit_nofile| default('100000') }}
-
+  register: mysql_limit
 
 - name: restart mariadb
   systemd: name=mariadb state=restarted enabled=yes daemon_reload=yes
+  when: mysql_conf.changed or mysql_limit.changed
 
 - name: wait for mysqld to restart
   wait_for:
