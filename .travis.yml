@@ -14,18 +14,19 @@ before_install:
   - 'docker pull geerlingguy/docker-${distro}-ansible:latest'
 
 script:
+  # Create ansible.cfg with correct roles_path
+  - printf '[defaults]\nroles_path=../' >ansible.cfg
   - container_id=$(mktemp) 
   - role_name=$(mktemp)
   - basename $PWD > $role_name
   - roles_dir=$(mktemp)  
-    #  - readlink ${PWD}/../ > $roles_dir  
   - echo ${PWD}/../ > $roles_dir  
   - 'docker run --detach --volume="$(cat ${roles_dir})":/etc/ansible/roles/role_under_test:ro ${run_opts} geerlingguy/docker-${distro}-ansible:latest "${init}" > "${container_id}"'
+
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
     ls /etc/ansible/roles/role_under_test/
 
-  - role_name=$(basename $(pwd))  
     #Check syntax 
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
