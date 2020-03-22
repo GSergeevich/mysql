@@ -27,21 +27,29 @@ script:
     docker exec "$(cat ${container_id})" env TERM=xterm     
     ls /etc/ansible/roles/role_under_test/
 
-    #Check syntax 
   - >
     docker exec "$(cat ${container_id})" env TERM=xterm     
+    ls 
+
+  - >
+    docker exec "$(cat ${container_id})" env TERM=xterm ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/$(cat ${role_name})/ansible.cfg
+    ansible-playbook --version     
+    
+    #Check syntax 
+  - >
+    docker exec "$(cat ${container_id})" env TERM=xterm  ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/$(cat ${role_name})/ansible.cfg   
     ansible-playbook /etc/ansible/roles/role_under_test/$(cat ${role_name})/tests/test.yml
     --syntax-check
    
     #First run playbook  
   - >
-    docker exec "$(cat ${container_id})" env TERM=xterm     
+    docker exec "$(cat ${container_id})" env TERM=xterm ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/$(cat ${role_name})/ansible.cfg    
     ansible-playbook /etc/ansible/roles/role_under_test/$(cat ${role_name})/tests/test.yml
   
     #Idempotence test
   - idempotence=$(mktemp)  
   - >
-    docker exec "$(cat ${container_id})" env TERM=xterm     
+    docker exec "$(cat ${container_id})" env TERM=xterm ANSIBLE_CONFIG=/etc/ansible/roles/role_under_test/$(cat ${role_name})/ansible.cfg    
     ansible-playbook /etc/ansible/roles/role_under_test/$(cat ${role_name})/tests/test.yml
     | tee -a ${idempotence}
 
